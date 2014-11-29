@@ -13,5 +13,9 @@ def index():
         tweets.append(tweet)
     return jsonify(text=tweets[0]["text"])
 
+@app.route("/", methods=["GET"])
+def index():
+    return "I am Musilitar. I am too big for the box."
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", port=80, debug=True)

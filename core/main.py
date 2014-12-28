@@ -19,11 +19,11 @@ tUInfo = tweets.uinfo
 
 class Streamer(TwythonStreamer):
     def on_success(self, data):
-        if "id_str" in data:
+        if "text" in data:
             if data["user"]["screen_name"] != "Musilitar":
-                id_str = data["id_str"]
-                response = "@" + data["user"]["screen_name"] + " " + dismantle(data)
-                twitter.update_status(status=response, in_reply_to_status_id_str=id_str)
+                #id_str = data["id_str"]
+                #response = "@" + data["user"]["screen_name"] + " " + dismantle(data)
+                #twitter.update_status(status=response, in_reply_to_status_id_str=id_str)
                 print(data["text"].encode("utf-8"))
 
     def on_error(self, status_code, data):

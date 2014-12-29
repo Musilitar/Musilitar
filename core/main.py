@@ -33,7 +33,7 @@ class Streamer(TwythonStreamer):
 
 def main():
     # tweet = twitter.get_home_timeline()[0]
-    #tweets.insert(tweet)
+    # tweets.insert(tweet)
     listen()
 
 

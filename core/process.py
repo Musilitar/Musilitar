@@ -1,11 +1,11 @@
-from data.tweets import tweetA, tweetB
-from difflib import SequenceMatcher
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 import string
-import re, math
+import re
+import math
 from collections import Counter
+from data import database
 
 
 WORD = re.compile(r'\w+')
@@ -57,10 +57,19 @@ def dismantle(tweet):
     return stemmed
 
 
-def process():
-    # score = SequenceMatcher(None, tweetA["text"].lower(), tweetB["text"].lower()).ratio()
-    cosine = get_cosine(dismantle(tweetA), dismantle(tweetB))
-    print(cosine)
+def is_question(text):
+    if "?" in text:
+        return True
+    return False
 
 
-process()
+def process(tweet):
+    if is_question(tweet["text"]):
+        possibilities = []
+        for key in dismantle(tweet).keys():
+            for definition in database.definitions.find():
+                if key in definition.keys():
+                    possibilities.append(definition[key])
+        return possibilities
+    else:
+        return None

@@ -38,9 +38,11 @@ def main():
 def listen():
     # streamer = Streamer(APP_KEY, APP_SECRET, TOKEN, TOKEN_SECRET)
     # streamer.user()
+    process(dummy.tweets[2])
     possibilities = process(dummy.tweets[3])
-    answer = respond(possibilities)
-    print(answer)
+    if possibilities is not None:
+        answer = respond(possibilities)
+        print(answer)
 
 
 if __name__ == "__main__":

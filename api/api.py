@@ -1,22 +1,17 @@
-from flask import Flask, jsonify
-from pymongo import Connection
+from flask import Flask, render_template, request
+from data.insert import insert
 
 app = Flask(__name__)
-connection = Connection("localhost", 27017)
-tweets = connection.tweets
-tUser = tweets.user
-tAQuestions = tweets.aquestions
-tUQuestions = tweets.uquestions
-tKInfo = tweets.kinfo
-tUInfo = tweets.uinfo
 
 
-@app.route("/", methods=["GET"])
+@app.route("/", methods=["GET", "POST"])
 def home():
-    return "I am Musilitar. I am too big for the box."
+    if request.method == "POST":
+        insert(request.form["screenname"])
+    return render_template("insert.html")
 
 
-@app.route("/t", methods=["GET"])
+'''@app.route("/t", methods=["GET"])
 def tweets():
     tweets = []
     for tweet in tUser.find():
@@ -36,9 +31,9 @@ def unansweredByID(index):
     questions = []
     for question in tUQuestions.find():
         questions.append(question)
-    return jsonify(text=questions[index]["text"])
+    return jsonify(text=questions[index]["text"])'''
 
 
 if __name__ == "__main__":
     app.run()
-    #app.run(host="0.0.0.0", port=80, debug=True)
+    # app.run(host="0.0.0.0", port=80, debug=True)

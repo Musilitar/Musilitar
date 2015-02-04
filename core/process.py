@@ -63,13 +63,36 @@ def is_question(text):
     return False
 
 
+def remove_key(dictionary, key):
+    temp = dict(dictionary)
+    del temp[key]
+    return temp
+
+
 def process(tweet):
+    keywords = dismantle(tweet)
     if is_question(tweet["text"]):
+        highest_cosine = 0
+        questions = database.questions.find()
+        for question in questions:
+            cosine = get_cosine(dismantle(tweet), dismantle(question))
+            if cosine > highest_cosine:
+                highest_cosine = cosine
+        if highest_cosine < 0.8:
+            print("Saving question: " + tweet["text"])
+            database.questions.save({"text": tweet["text"]})
+
         possibilities = []
-        for key in dismantle(tweet).keys():
+        for key in keywords.keys():
             for definition in database.definitions.find():
                 if key in definition.keys():
                     possibilities.append(definition[key])
         return possibilities
     else:
+        for key in keywords.keys():
+            matches = database.definitions.find({key: {"$exists": True}})
+            for other in remove_key(keywords, key):
+                if other not in matches:
+                    print("Saving definition: " + key + " = " + other)
+                    database.definitions.save({key: other})
         return None

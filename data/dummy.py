@@ -20,6 +20,10 @@ tweets = [
     {
         "id_str": 5,
         "text": "A type of fruit"
+    },
+    {
+        "id_str": 6,
+        "text": "What is an apple?"
     }
 ]
 

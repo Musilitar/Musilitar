@@ -2,8 +2,8 @@ from twython import Twython
 from twython import TwythonStreamer
 from data import dummy
 from data import database
-from core.process import process
-from core.respond import respond
+from core import listen
+from api import api
 
 APP_KEY = "66W0JAKaiGjLdyuf9vIVSysEe"
 APP_SECRET = "8diGCspCU2UUjnpzbDqbxnD3c4Yc50Hu7XHzIjGSdF7HDRiCXr"
@@ -28,21 +28,20 @@ class Streamer(TwythonStreamer):
 
 
 def main():
-    # tweet = twitter.get_home_timeline()[0]
-    # tweets.insert(tweet)
     database.client.drop_database("musilitar")
     dummy.load()
-    listen()
+    listen.listen_me()
+    api.app.run()
 
 
-def listen():
+'''def listen():
     # streamer = Streamer(APP_KEY, APP_SECRET, TOKEN, TOKEN_SECRET)
     # streamer.user()
     process(dummy.tweets[2])
     possibilities = process(dummy.tweets[3])
     if possibilities is not None:
         answer = respond(possibilities)
-        print(answer)
+        print(answer)'''
 
 
 if __name__ == "__main__":

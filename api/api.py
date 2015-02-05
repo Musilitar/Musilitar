@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 from data.insert import insert
+from core.process import process
+from core.respond import respond
 
 app = Flask(__name__)
 
@@ -9,6 +11,28 @@ def home():
     if request.method == "POST":
         insert(request.form["screenname"])
     return render_template("insert.html")
+
+
+@app.route("/speak", methods=["GET", "POST"])
+def speak():
+    if request.method == "GET":
+        return render_template("ask.html")
+    else:
+        if "question" in request.form:
+            question = {"text": request.form["question"]}
+            possibilities = process(question)
+            data = {}
+            if possibilities is not None:
+                answer = respond(possibilities)
+                if answer != "":
+                    data["response"] = answer
+            return render_template("response.html", **data)
+        else:
+            if "good" in request.form:
+                print("Answer was good")
+            if "bad" in request.form:
+                print("Answer was bad")
+            return render_template("ask.html")
 
 
 '''@app.route("/t", methods=["GET"])

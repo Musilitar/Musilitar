@@ -63,6 +63,23 @@ def is_question(text):
     return False
 
 
+def is_positive_feedback(text):
+    keywords = [
+        "thank",
+        "great",
+        "super",
+        "nice",
+        "awesome",
+        "cool",
+        "fantastic",
+        "thanks",
+    ]
+    if any(keyword in text for keyword in keywords):
+        return True
+    else:
+        return False
+
+
 def remove_key(dictionary, key):
     temp = dict(dictionary)
     del temp[key]
@@ -82,12 +99,8 @@ def process(tweet):
             print("Saving question: " + tweet["text"])
             database.questions.save({"text": tweet["text"]})
 
-        possibilities = []
-        for key in keywords.keys():
-            for definition in database.definitions.find():
-                if key in definition.keys():
-                    possibilities.append(definition[key])
-        return possibilities
+        definitions = database.definitions.find({"stem": {"$in": list(keywords.keys())}})
+        return definitions
     else:
         for key in keywords.keys():
             matches = database.definitions.find({key: {"$exists": True}})

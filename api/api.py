@@ -22,10 +22,9 @@ def speak():
             question = {"text": request.form["question"]}
             possibilities = process(question)
             data = {}
-            if possibilities is not None:
-                answer = respond(possibilities)
-                if answer != "":
-                    data["response"] = answer
+            answer = respond(possibilities)
+            if answer != "":
+                data["response"] = answer
             return render_template("response.html", **data)
         else:
             if "good" in request.form:

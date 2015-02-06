@@ -1,5 +1,4 @@
 from data import database
-from core.listen import switch_target
 
 
 def insert(screenname):

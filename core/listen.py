@@ -2,8 +2,9 @@ import time
 import threading
 from twython import Twython
 from twython import TwythonStreamer
-from data import database, dummy
+from data import database
 import pymongo
+from core import process
 
 
 APP_KEY = "66W0JAKaiGjLdyuf9vIVSysEe"
@@ -22,7 +23,7 @@ class StreamOthers(TwythonStreamer):
         print(data["text"])
         if time.time() - StreamOthers.t0 >= 300:
             StreamOthers.t0 = time.time()
-            switch_target()
+            start_other()
 
     def on_error(self, status_code, data):
         print(status_code)
@@ -31,17 +32,17 @@ class StreamOthers(TwythonStreamer):
 
 class StreamMe(TwythonStreamer):
     def on_success(self, data):
-        if "in_reply_to_status_id_str" in data:
-            original_id = data["in_reply_to_status_id_str"]
-            original_tweet = database.sent.find_one({"id_str": original_id})
-            if original_tweet is not None:
-                definitions = database.definitions.find({"definitions.in": original_id})
-                if definitions is not None:
-                    print("ullo1")
-                    for definition in definitions:
-                        print("ullo2")
-                        amount = len(definition["definitions"])
-                        # database.definitions.update({"stem": definition["stem"]},{"$inc": {"score": 1}})
+        if "in_reply_to_status_id_str" in data and "text" in data:
+            if process.is_positive_feedback(data["text"]):
+                tweet_id = data["in_reply_to_status_id_str"]
+                tweet = database.sent.find_one({"id_str": str(tweet_id)})
+                if tweet is not None:
+                    for definition_id in tweet["definitions"]:
+                        definition = database.definitions.find_one({"id": definition_id})
+                        amount = database.definitions.find({"stem": definition["stem"]}).count()
+                        if 1 - definition["score"] > 0:
+                            database.definitions.update({"id": definition_id},
+                                                        {"$inc": {"score": (1 - definition["score"]) / amount}})
 
     def on_error(self, status_code, data):
         print(status_code)
@@ -51,7 +52,7 @@ streamOthers = StreamOthers(APP_KEY, APP_SECRET, TOKEN, TOKEN_SECRET)
 streamMe = StreamMe(APP_KEY, APP_SECRET, TOKEN, TOKEN_SECRET)
 
 
-def switch_target():
+def start_other():
     cursor = database.accounts.find().sort([("priority", pymongo.ASCENDING)])
     target = next(cursor)
     if target is not None:
@@ -65,10 +66,15 @@ def switch_target():
         streamOthers.statuses.filter(track=target["screenname"])
 
 
+def start_me():
+    streamMe.user()
+
+
 def listen_others():
-    thread = threading.Thread(target=switch_target)
+    thread = threading.Thread(target=start_other)
     thread.start()
 
 
 def listen_me():
-    streamMe.on_success(dummy.received_tweets[7])
+    thread = threading.Thread(target=start_me)
+    thread.start()

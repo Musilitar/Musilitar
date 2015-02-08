@@ -8,9 +8,6 @@ from collections import Counter
 from data import database
 
 
-WORD = re.compile(r'\w+')
-
-
 def get_cosine(vec1, vec2):
     intersection = set(vec1.keys()) & set(vec2.keys())
     numerator = sum([vec1[x] * vec2[x] for x in intersection])
@@ -23,11 +20,6 @@ def get_cosine(vec1, vec2):
         return 0.0
     else:
         return float(numerator) / denominator
-
-
-def text_to_vector(text):
-    words = WORD.findall(text)
-    return Counter(words)
 
 
 def tokenize(text):
@@ -100,7 +92,10 @@ def process(tweet):
             database.questions.save({"text": tweet["text"]})
 
         definitions = database.definitions.find({"stem": {"$in": list(keywords.keys())}})
-        return definitions
+        if definitions is None or definitions.count() == 0:
+            return {"keywords": list(keywords.keys())}
+        else:
+            return {"definitions": definitions}
     else:
         for key in keywords.keys():
             matches = database.definitions.find({key: {"$exists": True}})

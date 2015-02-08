@@ -17,19 +17,34 @@ def get_cosine(vec1, vec2):
         return float(numerator) / denominator
 
 
-def respond(definitions):
+def respond(result):
     answer = ""
-    if definitions is None or len(definitions) == 0:
-        search.search(["tree"])
+    if "keywords" in result:
+        answer = search.search(result["keywords"])
     else:
+        definitions = result["definitions"]
         length = len(definitions)
+        match_exists = False
         for definitionA in definitions:
             matches = 0
             for definitionB in definitions:
                 if definitionA["text"] == definitionB["text"]:
                     matches += 1
-                    if matches > length / 2:
-                        answer = definitionA
-                        # TODO: save with id_str from returned Twitter status update object
-                        database.answers.save({"text": definitionA["text"], "definitions": [definitionA["_id"]]})
+            if matches > length / 2:
+                match_exists = True
+                answer = definitionA
+                # TODO: save with id_str from returned Twitter status update object
+                database.answers.save({"text": definitionA["text"], "definitions": [definitionA["_id"]]})
+
+        if not match_exists:
+            text = ""
+            ids = []
+            for i, definition in enumerate(definitions):
+                if i > 0:
+                    text += "; " + definition["text"]
+                else:
+                    text += definition["text"]
+                ids.append(definition["_id"])
+            answer = text
+            database.answers.save({"text": text, "definitions": ids})
     return answer

@@ -33,16 +33,26 @@ class StreamOthers(TwythonStreamer):
 class StreamMe(TwythonStreamer):
     def on_success(self, data):
         if "in_reply_to_status_id_str" in data and "text" in data:
-            if process.is_positive_feedback(data["text"]):
-                tweet_id = data["in_reply_to_status_id_str"]
-                tweet = database.sent.find_one({"id_str": str(tweet_id)})
-                if tweet is not None:
+            tweet_id = data["in_reply_to_status_id_str"]
+            tweet = database.sent.find_one({"id_str": str(tweet_id)})
+            if tweet is not None:
+                if process.is_positive_feedback(data["text"]):
                     for definition_id in tweet["definitions"]:
                         definition = database.definitions.find_one({"id": definition_id})
                         amount = database.definitions.find({"stem": definition["stem"]}).count()
                         if 1 - definition["score"] > 0:
                             database.definitions.update({"id": definition_id},
                                                         {"$inc": {"score": (1 - definition["score"]) / amount}})
+                else:
+                    keywords = process.dismantle(data)
+                    for definition_id in tweet["definitions"]:
+                        definition = database.definitions.find_one({"id": definition_id})
+                        if definition["text"] in keywords.keys():
+                            amount = database.definitions.find({"stem": definition["stem"]}).count()
+                            if 1 - definition["score"] > 0:
+                                database.definitions.update({"id": definition_id},
+                                                            {"$inc": {"score": -((1 - definition["score"]) / amount)}})
+
 
     def on_error(self, status_code, data):
         print(status_code)

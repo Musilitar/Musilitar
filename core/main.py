@@ -7,8 +7,8 @@ from api import api
 def main():
     database.client.drop_database("musilitar")
     dummy.load()
-    definitions = process.process(dummy.received_tweets[8])
-    answer = respond.respond(definitions)
+    result = process.process(dummy.received_tweets[8])
+    answer = respond.respond(result)
     print(answer)
     api.app.run()
 

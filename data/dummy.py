@@ -37,6 +37,10 @@ received_tweets = [
     {
         "id_str": "11",
         "text": "What is a tree?"
+    },
+    {
+        "id_str": "12",
+        "text": "What is a pear?"
     }
 ]
 
@@ -61,6 +65,11 @@ definitions = [
     {
         "stem": "pear",
         "text": "A type of fruit",
+        "score": 0.5
+    },
+    {
+        "stem": "pear",
+        "text": "Green",
         "score": 0.5
     },
     {

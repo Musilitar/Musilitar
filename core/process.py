@@ -2,10 +2,9 @@ from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 import string
-import re
 import math
-from collections import Counter
 from data import database
+import pymongo
 
 
 def get_cosine(vec1, vec2):
@@ -91,11 +90,11 @@ def process(tweet):
             print("Saving question: " + tweet["text"])
             database.questions.save({"text": tweet["text"]})
 
-        definitions = database.definitions.find({"stem": {"$in": list(keywords.keys())}})
+        definitions = database.definitions.find({"stem": {"$in": list(keywords.keys())}}).sort([("score", pymongo.DESCENDING)])
         if definitions is None or definitions.count() == 0:
             return {"keywords": list(keywords.keys())}
         else:
-            return {"definitions": definitions}
+            return {"definitions": list(definitions)}
     else:
         for key in keywords.keys():
             matches = database.definitions.find({key: {"$exists": True}})

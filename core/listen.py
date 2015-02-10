@@ -53,7 +53,6 @@ class StreamMe(TwythonStreamer):
                                 database.definitions.update({"id": definition_id},
                                                             {"$inc": {"score": -((1 - definition["score"]) / amount)}})
 
-
     def on_error(self, status_code, data):
         print(status_code)
         self.disconnect()

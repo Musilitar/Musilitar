@@ -18,6 +18,14 @@ def get_highest_scoring_aggregate(stem):
         return None
 
 
+def text_exists_for_stem(stem, text):
+    result = database.definitions.find_one({"stem": stem, "text": text})
+    if result is not None:
+        return True
+    else:
+        return False
+
+
 def is_highest_scoring(definition):
     matches = database.definitions.find({"stem": definition["stem"]}).sort([("score", pymongo.DESCENDING)])
     if matches is not None and len(list(matches)) > 0:

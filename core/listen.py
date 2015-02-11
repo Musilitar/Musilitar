@@ -37,6 +37,10 @@ class StreamMe(TwythonStreamer):
             tweet = database.sent.find_one({"id_str": str(tweet_id)})
             if tweet is not None:
                 if process.is_positive_feedback(data["text"]):
+                    database.received.save({"id_str": data["id_str"],
+                                            "in_reply_to_status_id_str": data["in_reply_to_status_id_str"],
+                                            "text": data["text"],
+                                            "feedback": 1})
                     for definition_id in tweet["definitions"]:
                         definition = database.definitions.find_one({"id": definition_id})
                         amount = database.definitions.find({"stem": definition["stem"]}).count()
@@ -44,6 +48,10 @@ class StreamMe(TwythonStreamer):
                             database.definitions.update({"id": definition_id},
                                                         {"$inc": {"score": (1 - definition["score"]) / amount}})
                 else:
+                    database.received.save({"id_str": data["id_str"],
+                                            "in_reply_to_status_id_str": data["in_reply_to_status_id_str"],
+                                            "text": data["text"],
+                                            "feedback": -1})
                     keywords = process.dismantle(data)
                     for definition_id in tweet["definitions"]:
                         definition = database.definitions.find_one({"id": definition_id})

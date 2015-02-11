@@ -32,7 +32,8 @@ received_tweets = [
     {
         "id_str": "10",
         "in_reply_to_status_id_str": "5",
-        "text": "Thank you!"
+        "text": "Thank you!",
+        "feedback": 1
     },
     {
         "id_str": "11",
@@ -65,7 +66,7 @@ definitions = [
     {
         "stem": "pear",
         "text": "A type of fruit",
-        "score": 0.5
+        "score": 0.6
     },
     {
         "stem": "pear",

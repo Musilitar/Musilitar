@@ -24,20 +24,40 @@ def respond(result):
         answer = search.search(result["keywords"])
     else:
         definitions = result["definitions"]
-        length = len(definitions)
-        match_exists = False
-        for definitionA in definitions:
+        used_stems = []
+        without_aggregates = [definition for definition in definitions if "using" not in definition]
+        for definition in without_aggregates:
             matches = 0
-            for definitionB in definitions:
-                if definitionA["text"] == definitionB["text"]:
+            other_definitions = list(without_aggregates)
+            other_definitions.remove(definition)
+            for other in other_definitions:
+                if definition["text"] == other["text"]:
                     matches += 1
-            if matches >= length / 2:
-                match_exists = True
-                answer.append(definitionA)
+            if matches > 0:
+                used_stems.append(definition["stem"])
                 # TODO: save with id_str from returned Twitter status update object
-                database.answers.save({"text": definitionA["text"], "definitions": [definitionA["_id"]]})
+                # database.answers.save({"text": definitionA["text"], "definitions": [definitionA["_id"]]})
 
-        if not match_exists:
+        if len(used_stems) > 0:
+            text = ""
+            ids = []
+            usable_definitions = [definition for definition in definitions if definition["stem"] in used_stems and "using" not in definition]
+            for i, definition in enumerate(usable_definitions):
+                if definition["text"] not in text:
+                    if i > 0:
+                        text += "; " + definition["text"]
+                    else:
+                        text += definition["text"]
+                ids.append(definition["_id"])
+
+            for stem in used_stems:
+                if not definition_model.text_exists_for_stem(stem, text):
+                    new_definition = {"stem": stem, "text": text, "score": 0.5, "using": ids}
+                    answer.append(new_definition)
+                    print("Saving new definition: " + str(new_definition))
+                    database.definitions.save(new_definition)
+
+        else:
             text = ""
             ids = []
             new_definitions = []

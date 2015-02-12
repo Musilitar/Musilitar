@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg id="svg4152" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="1100" width="600" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 600 1100">
+ <g id="layer2" class="body" fill-rule="evenodd" transform="translate(-100.36 48.679)" stroke="#000" fill="#000080">
+  <g stroke-width="5">
+   <path id="path4183" d="m482.86 663.79s-42.857 308.57-91.429 371.43c-48.571 62.857 71.429-102.86-22.857-274.29s114.29-97.143 114.29-97.143z"/>
+   <path id="path4185" d="m405.63 681.57s-63.989 264.5-136.51 318.38c-72.521 53.879 106.65-88.166-34.128-235.11s170.64-83.268 170.64-83.268z"/>
+   <path id="path4187" d="m311.52 707.16s-45.555 209.76-97.184 252.49c-51.629 42.729 75.925-69.921-24.296-186.45s121.48-66.036 121.48-66.036z"/>
+  </g>
+  <path id="path4191" d="m451.43 629.51s142.86 125.71 182.86 108.57c40-17.15-14.29-71.43-14.29-71.43s65.714 125.71-160-71.429-8.5714 34.286-8.5714 34.286z" stroke-width="1px"/>
+  <path id="path4754" d="m468.52 660.63s-61.363 246.96-130.91 297.26c-69.544 50.306 102.27-82.319-32.727-219.52s163.63-77.746 163.63-77.746z" stroke-width="5"/>
+  <path id="path4756" d="m260.05 580.56s-44.651 247.09-95.255 297.42c-50.604 50.332 74.418-82.362-23.814-219.63-98.228-137.28 119.07-77.79 119.07-77.79z" stroke-width="5"/>
+ </g>
+ <g id="layer1" class="body" transform="translate(-100.36 48.679)">
+  <ellipse id="path4174" rx="201.43" ry="322.86" stroke="#000" cy="515.22" cx="304.29" stroke-width="5" fill="#000080"/>
+  <ellipse id="path4176" rx="51.429" ry="22.857" cy="538.08" cx="331.43" stroke-width="5" fill="#000080"/>
+  <path id="path4752" d="m432.15 372.49s-21.514-55.96-72.61-47.351" stroke="#000" stroke-width="15" fill="none"/>
+ </g>
+ <g id="layer3" transform="translate(-100.36 48.679)">
+  <path id="path4198" fill="#f00" transform="matrix(.64194 0 0 .87628 216.71 31.148)" stroke="#000" stroke-width="5" d="m637.14 343.79-79.795 0.3553 39.59-69.282z"/>
+  <ellipse id="path4194" rx="95.714" ry="140" stroke="#000" cy="163.79" cx="598.57" stroke-width="5" fill="#f00"/>
+  <path id="path4202" opacity="0" stroke-width="19.6" d="m600 332.36v534.29"/>
+  <path id="path4746" d="m605.71 332.36s51.429 488.57-5.7143 585.71" stroke="#000" stroke-width="5" fill="none"/>
+ </g>
+</svg>

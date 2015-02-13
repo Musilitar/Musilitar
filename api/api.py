@@ -13,7 +13,6 @@ def index():
     return render_template("index.html", **data)
 
 
-
 @app.route("/insert", methods=["GET", "POST"])
 def insert():
     if request.method == "POST":

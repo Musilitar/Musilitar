@@ -4,15 +4,23 @@ from core.process import process
 from core.respond import respond
 from api import statistics
 
+
+# ---
+# Module for HTTP requests, acts as a controller
+# ---
+
+
 app = Flask(__name__)
 
 
+# Index URL, returns home page with statistics data
 @app.route("/", methods=["GET"])
 def index():
     data = statistics.get_all_statistics()
     return render_template("index.html", **data)
 
 
+# Insert URL, allows account to be added to the accounts database
 @app.route("/insert", methods=["GET", "POST"])
 def insert():
     if request.method == "POST":
@@ -20,6 +28,7 @@ def insert():
     return render_template("insert.html")
 
 
+# Speak URL, allows questions to be asked and answered
 @app.route("/speak", methods=["GET", "POST"])
 def speak():
     if request.method == "GET":

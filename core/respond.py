@@ -4,6 +4,12 @@ from data import database
 from models import definition as definition_model
 
 
+# ---
+# Module for forming a response
+# ---
+
+
+# Return similarity (0 - 1) between to dictionaries
 def get_cosine(vec1, vec2):
     intersection = set(vec1.keys()) & set(vec2.keys())
     numerator = sum([vec1[x] * vec2[x] for x in intersection])
@@ -18,14 +24,21 @@ def get_cosine(vec1, vec2):
         return float(numerator) / denominator
 
 
+# Form a response based on a list of keywords or definitions
 def respond(result):
     answer = []
+
+    # If there are no definitions defined, find new ones
     if "keywords" in result:
         answer = search.search(result["keywords"])
     else:
         definitions = result["definitions"]
         used_stems = []
+
+        # Only use standalone definitions for now
         without_aggregates = [definition for definition in definitions if "using" not in definition]
+
+        # Check if two or more definitions are the same, if so use them for answer
         for definition in without_aggregates:
             matches = 0
             other_definitions = list(without_aggregates)
@@ -38,9 +51,12 @@ def respond(result):
                 # TODO: save with id_str from returned Twitter status update object
                 # database.answers.save({"text": definitionA["text"], "definitions": [definitionA["_id"]]})
 
+        # Check if usable definitions were found
         if len(used_stems) > 0:
             text = ""
             ids = []
+
+            # Create list of standalone definitions based on usable stems found in previous loop
             usable_definitions = [definition for definition in definitions if definition["stem"] in used_stems and "using" not in definition]
             for i, definition in enumerate(usable_definitions):
                 if definition["text"] not in text:

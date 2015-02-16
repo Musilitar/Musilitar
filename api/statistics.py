@@ -1,21 +1,36 @@
 from data import database
 
 
+# ---
+# Module for gathering statistics from database
+# ---
+
+
+# Return the amount of definitions in the database (int)
 def get_amount_definitions():
     amount = database.definitions.find().count()
     return amount
 
 
+# Return the amount of sent Tweets in the database (int)
 def get_amount_sent_tweets():
     amount = database.sent.find().count()
     return amount
 
 
+# Return the amount of received Tweets in the database (int)
 def get_amount_received_tweets():
     amount = database.received.find().count()
     return amount
 
 
+# Return the amount of accounts in the database (int)
+def get_amount_accounts():
+    amount = database.accounts.find().count()
+    return amount
+
+
+# Return the percentage of feedback that is positive (int)
 def get_percentage_positive_feedback():
     result = database.received.find({"feedback": {"$exists": True}})
     feedback = list(result)
@@ -29,6 +44,7 @@ def get_percentage_positive_feedback():
     return percentage
 
 
+# Return the stem for which the most definitions exist (str)
 def get_stem_with_most_definitions():
     stem = database.definitions.aggregate([{"$group": {"_id": "$stem", "amount": {"$sum": 1}}},
                                            {"$sort": {"amount": -1}},
@@ -40,11 +56,7 @@ def get_stem_with_most_definitions():
         return "nothing was found"
 
 
-def get_amount_accounts():
-    amount = database.accounts.find().count()
-    return amount
-
-
+# Return the highest scoring definition
 def get_best_definition():
     definition = database.definitions.aggregate([{"$group": {"_id": {"_id": "$stem", "text": "$text"},
                                                              "score": {"$max": "$score"}}},
@@ -57,6 +69,7 @@ def get_best_definition():
         return "nothing was found"
 
 
+# Call all statistic functions and return results in dictionary
 def get_all_statistics():
     data = {
         "amount_definitions": get_amount_definitions(),

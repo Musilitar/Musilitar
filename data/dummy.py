@@ -1,5 +1,11 @@
 from data import database
 
+
+# ---
+# Module for dummy data
+# ---
+
+
 received_tweets = [
     {
         "id_str": "1",
@@ -92,6 +98,7 @@ accounts = [
 ]
 
 
+# Insert all dummy data in the correct collection
 def load():
     database.sent.insert(sent_tweets)
     database.received.insert(received_tweets)

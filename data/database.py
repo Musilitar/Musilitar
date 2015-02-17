@@ -1,7 +1,18 @@
 from pymongo import MongoClient
 
+
+# ---
+# Module for keeping global database variables
+# ---
+
+
+# Main connection
 client = MongoClient()
+
+# Main database
 db = client.musilitar
+
+# Collections
 tweets = db.tweets
 sent = tweets.sent
 received = tweets.received

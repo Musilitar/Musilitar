@@ -6,6 +6,15 @@ from math import sqrt
 # ---
 
 
+# Copyright:
+# SEGARAN (T.)
+# Programming Collective Intelligence
+# Sebastopol
+# O’Reilly Media, Inc.
+# 2007
+# pp. 11-13
+
+
 # Returns a distance-based similarity score for identifier_a & identifier_b
 def similarity_euclidean(items, identifier_a, identifier_b):
     shared_items = {}

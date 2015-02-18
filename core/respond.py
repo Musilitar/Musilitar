@@ -10,6 +10,10 @@ from models import definition as definition_model
 
 
 # Return similarity (0 - 1) between to dictionaries
+# Copyright:
+# StackOverflow user vpekar
+# http://stackoverflow.com/questions/15173225/how-to-calculate-cosine-similarity-given-2-sentence-strings-python
+# Date of consultation: 29/12/2014
 def get_cosine(vec1, vec2):
     intersection = set(vec1.keys()) & set(vec2.keys())
     numerator = sum([vec1[x] * vec2[x] for x in intersection])

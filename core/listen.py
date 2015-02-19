@@ -67,7 +67,7 @@ class StreamMe(TwythonStreamer):
                         definition = database.definitions.find_one({"_id": definition_id})
                         amount = database.definitions.find({"stem": definition["stem"]}).count()
                         if 1 - definition["score"] > 0:
-                            database.definitions.update({"id": definition_id},
+                            database.definitions.update({"_id": definition_id},
                                                         {"$inc": {"score": (1 - definition["score"]) / amount}})
                 else:
 
@@ -81,10 +81,10 @@ class StreamMe(TwythonStreamer):
                     keywords = process.dismantle(data)
                     for definition_id in tweet["definitions"]:
                         definition = database.definitions.find_one({"_id": definition_id})
-                        if definition["text"] in keywords.keys():
+                        if any(keyword in definition["text"] for keyword in keywords.keys()):
                             amount = database.definitions.find({"stem": definition["stem"]}).count()
                             if 1 - definition["score"] > 0:
-                                database.definitions.update({"id": definition_id},
+                                database.definitions.update({"_id": definition_id},
                                                             {"$inc": {"score": -((1 - definition["score"]) / amount)}})
 
     # Disconnect stream on error

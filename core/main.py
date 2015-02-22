@@ -1,6 +1,6 @@
 from data import dummy
 from data import database
-from core import process, respond
+from core import process, respond, listen, tweeter
 from api import api, statistics
 
 
@@ -13,7 +13,7 @@ from api import api, statistics
 def main():
     database.client.drop_database("musilitar")
     dummy.load()
-    api.app.run()
+    listen.listen_me()
 
 
 if __name__ == "__main__":

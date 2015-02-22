@@ -1,3 +1,4 @@
+from functools import reduce
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
@@ -5,6 +6,7 @@ import string
 import math
 from data import database
 import pymongo
+from itertools import chain
 
 
 # ---
@@ -29,6 +31,18 @@ def get_cosine(vec1, vec2):
         return 0.0
     else:
         return float(numerator) / denominator
+
+
+# Remove Twitter specific text
+# Inspired by:
+# StackOverflow user J.F. Sebastian
+# http://stackoverflow.com/questions/13896056/how-to-remove-user-mentions-and-urls-in-a-tweet-string-using-python
+# Date of consultation: 22/02/2015
+def untwitter(tweet):
+    urls = (entity["url"] for entity in tweet["entities"]["urls"])
+    users = ("@" + entity["screen_name"] for entity in tweet["entities"]["user_mentions"])
+    text = reduce(lambda t, s: t.replace(s, ""), chain(urls, users), tweet["text"])
+    return text.strip()
 
 
 # Return tokenized, punctuationless array of words from string
@@ -58,7 +72,8 @@ def stem(tokens):
 
 # Return tokenized, filtered and stemmed dictionary of keywords from Tweet text
 def dismantle(tweet):
-    tokenized = tokenize(tweet["text"])
+    untwittered = untwitter(tweet)
+    tokenized = tokenize(untwittered)
     filtered = remove_stopwords(tokenized)
     stemmed = stem(filtered)
     return stemmed
@@ -115,8 +130,8 @@ def process(tweet):
         if highest_cosine < 0.8:
 
             # If not, save it
-            print("Saving question: " + tweet["text"])
-            database.questions.save({"text": tweet["text"]})
+            print("Saving question: " + untwitter(tweet))
+            database.questions.save({"text": untwitter(tweet)})
 
         # Find definitions related to the question
         definitions = database.definitions.find({"stem": {"$in": list(keywords.keys())}}).sort([("score", pymongo.DESCENDING)])
@@ -126,6 +141,8 @@ def process(tweet):
             return {"keywords": list(keywords.keys())}
         else:
             return {"definitions": list(definitions)}
+
+    # If tweet is not a question
     else:
 
         # Find definitions for the keywords in the Tweet

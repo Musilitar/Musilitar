@@ -4,7 +4,7 @@ from models import definition
 
 
 # ---
-# Module for testing the process module
+# Module for testing the respond module
 # ---
 
 

@@ -1,3 +1,8 @@
+# ---
+# Module for model of tweet, to provide functionality for working with them
+# ---
+
+
 # Check if incoming Tweet was not send by application
 def is_not_from_me(data):
     if "user" in data:

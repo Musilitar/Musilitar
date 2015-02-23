@@ -14,6 +14,7 @@ def main():
     database.client.drop_database("musilitar")
     dummy.load()
     listen.listen_me()
+    api.app.run()
 
 
 if __name__ == "__main__":

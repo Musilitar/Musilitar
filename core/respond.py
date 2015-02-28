@@ -77,7 +77,7 @@ def respond(result):
 
             # Create new definition for stem if it doesn't exist yet
             for stem in used_stems:
-                if not definition_model.text_exists_for_stem(stem, text):
+                if not definition_model.text_exists_for_stem(stem, text) and not any(definition["text"] == text for definition in answer):
                     new_definition = {"stem": stem, "text": text, "score": 0.5, "using": ids}
                     answer.append(new_definition)
                     print("Saving new definition: " + str(new_definition))

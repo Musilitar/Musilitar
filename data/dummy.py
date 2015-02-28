@@ -76,7 +76,7 @@ definitions = [
     },
     {
         "stem": "pear",
-        "text": "Green",
+        "text": "green",
         "score": 0.5
     },
     {

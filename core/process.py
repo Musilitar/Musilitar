@@ -39,10 +39,13 @@ def get_cosine(vec1, vec2):
 # http://stackoverflow.com/questions/13896056/how-to-remove-user-mentions-and-urls-in-a-tweet-string-using-python
 # Date of consultation: 22/02/2015
 def untwitter(tweet):
-    urls = (entity["url"] for entity in tweet["entities"]["urls"])
-    users = ("@" + entity["screen_name"] for entity in tweet["entities"]["user_mentions"])
-    text = reduce(lambda t, s: t.replace(s, ""), chain(urls, users), tweet["text"])
-    return text.strip()
+    if "entities" in tweet:
+        urls = (entity["url"] for entity in tweet["entities"]["urls"])
+        users = ("@" + entity["screen_name"] for entity in tweet["entities"]["user_mentions"])
+        text = reduce(lambda t, s: t.replace(s, ""), chain(urls, users), tweet["text"])
+        return text.strip()
+    else:
+        return tweet["text"]
 
 
 # Return tokenized, punctuationless array of words from string

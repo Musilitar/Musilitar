@@ -98,9 +98,10 @@ class StreamMe(TwythonStreamer):
                     if "text" in data:
                         result = process.process(data)
                         print("Result: " + str(result))
-                        answer = respond.respond(result)
-                        print("Answer: " + str(answer))
-                        tweeter.tweet_response(answer, data)
+                        if result is not None:
+                            answer = respond.respond(result)
+                            print("Answer: " + str(answer))
+                            tweeter.tweet_response(answer, data)
 
     # Disconnect stream on error
     def on_error(self, status_code, data):
